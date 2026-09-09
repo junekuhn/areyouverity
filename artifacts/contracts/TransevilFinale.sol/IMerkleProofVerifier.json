@@ -1,0 +1,48 @@
+{
+  "_format": "hh3-artifact-1",
+  "contractName": "IMerkleProofVerifier",
+  "sourceName": "contracts/TransevilFinale.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256[2]",
+          "name": "_pA",
+          "type": "uint256[2]"
+        },
+        {
+          "internalType": "uint256[2][2]",
+          "name": "_pB",
+          "type": "uint256[2][2]"
+        },
+        {
+          "internalType": "uint256[2]",
+          "name": "_pC",
+          "type": "uint256[2]"
+        },
+        {
+          "internalType": "uint256[1]",
+          "name": "_pubSignals",
+          "type": "uint256[1]"
+        }
+      ],
+      "name": "verifyProof",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {},
+  "immutableReferences": {},
+  "inputSourceName": "project/contracts/TransevilFinale.sol",
+  "buildInfoId": "solc-0_8_24-eb8d08ae920f7c5ced24bf4366e2d015736c5730"
+}

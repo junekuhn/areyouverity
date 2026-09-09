@@ -1,0 +1,48 @@
+{
+  "_format": "hh3-artifact-1",
+  "contractName": "MockWitnessProofVerifier",
+  "sourceName": "contracts/MockWitnessProofVerifier.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256[2]",
+          "name": "",
+          "type": "uint256[2]"
+        },
+        {
+          "internalType": "uint256[2][2]",
+          "name": "",
+          "type": "uint256[2][2]"
+        },
+        {
+          "internalType": "uint256[2]",
+          "name": "",
+          "type": "uint256[2]"
+        },
+        {
+          "internalType": "uint256[3]",
+          "name": "",
+          "type": "uint256[3]"
+        }
+      ],
+      "name": "verifyProof",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561000f575f80fd5b5060f88061001c5f395ff3fe6080604052348015600e575f80fd5b50600436106026575f3560e01c806311479fea14602a575b5f80fd5b603f60353660046068565b6001949350505050565b604051901515815260200160405180910390f35b80604081018310156062575f80fd5b92915050565b5f805f80610160808688031215607c575f80fd5b608487876053565b945060c08601878111156095575f80fd5b60408701945060a388826053565b93505086818701111560b3575f80fd5b5092959194509261010001915056fea2646970667358221220f2dee64417e79930c1a1abf85655d6f364db5fb546ea47c842d5965855a1969164736f6c63430008180033",
+  "deployedBytecode": "0x6080604052348015600e575f80fd5b50600436106026575f3560e01c806311479fea14602a575b5f80fd5b603f60353660046068565b6001949350505050565b604051901515815260200160405180910390f35b80604081018310156062575f80fd5b92915050565b5f805f80610160808688031215607c575f80fd5b608487876053565b945060c08601878111156095575f80fd5b60408701945060a388826053565b93505086818701111560b3575f80fd5b5092959194509261010001915056fea2646970667358221220f2dee64417e79930c1a1abf85655d6f364db5fb546ea47c842d5965855a1969164736f6c63430008180033",
+  "linkReferences": {},
+  "deployedLinkReferences": {},
+  "immutableReferences": {},
+  "inputSourceName": "project/contracts/MockWitnessProofVerifier.sol",
+  "buildInfoId": "solc-0_8_24-eb8d08ae920f7c5ced24bf4366e2d015736c5730"
+}

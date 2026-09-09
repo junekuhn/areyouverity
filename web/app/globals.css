@@ -1,0 +1,790 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   ARE YOU VERITY? — design system
+   One register: paper. Light throughout — the terminal and the
+   document share the same white/black world.
+   ============================================================ */
+
+:root {
+  --bg: #ffffff;
+  --bg-raised: #f5f5f3;
+  --ink: #17140d;
+  --ink-60: rgba(23, 20, 13, 0.9);
+  --ink-40: rgba(23, 20, 13, 0.9);
+  --ink-25: rgba(23, 20, 13, 0.9);
+  --line: rgba(23, 20, 13, 0.6);
+  --line-strong: rgba(23, 20, 13, 0.34);
+
+  /* status: green / purple / blue */
+  --valid: #0f7a3d;
+  --questioning: #5b21b6;
+  --void: #1d4ed8;
+
+  --paper: #f1ede2;
+  --paper-shade: #e5e0d2;
+  --paper-ink: #191713;
+  --paper-faint: rgba(25, 23, 19, 0.62);
+  --paper-line: rgba(25, 23, 19, 0.18);
+
+  --font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Georgia,
+    "Times New Roman", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #cbc4b2;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b0a892;
+}
+
+/* ---- ambient film: faint paper grain, behind everything ---- */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  mix-blend-mode: multiply;
+}
+
+/* ============================================================
+   LAYOUT SHELL — header / main / footer, no fixed overlays
+   ============================================================ */
+
+.shell {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 clamp(1rem, 4vw, 2.5rem);
+  height: 3rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  flex-shrink: 0;
+}
+
+.site-header .wordmark {
+  text-transform: uppercase;
+  color: var(--ink-60);
+  transition: color 0.15s ease;
+  white-space: nowrap;
+}
+.site-header .wordmark:hover {
+  color: var(--ink);
+}
+.site-header .wordmark b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* On phones the wordmark + status chip + wallet button exceed the row width,
+   and body overflow-x is hidden — so the wallet button would be clipped off.
+   Let the row wrap: wordmark on top, chip + wallet drop to a second line. */
+@media (max-width: 480px) {
+  .site-header {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 3rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    row-gap: 0.5rem;
+  }
+  .site-header > div {
+    margin-left: auto;
+  }
+}
+
+.site-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 1.1rem clamp(1rem, 4vw, 2.5rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-40);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* centered page container for terminal pages */
+.page {
+  width: 100%;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5.5vh, 3.75rem) 1.25rem 3rem;
+}
+.page-wide {
+  max-width: 66rem;
+}
+
+/* ============================================================
+   TYPE
+   ============================================================ */
+
+.kicker {
+  font-size: 0.7rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.question-xl {
+  font-size: clamp(2.3rem, 8vw, 5.5rem);
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.question-lg {
+  font-size: clamp(1.5rem, 4.2vw, 2.5rem);
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.prose-dim {
+  color: var(--ink-60);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+
+.glitch-hover {
+  transition: text-shadow 0.1s ease;
+}
+.glitch-hover:hover {
+  text-shadow: -2px 0 var(--void), 2px 0 var(--valid);
+}
+
+.glitch-now {
+  animation: glitch 5s infinite;
+}
+
+@keyframes glitch {
+  0%, 92%, 100% { text-shadow: none; }
+  93% { text-shadow: -3px 0 var(--void), 3px 0 var(--valid); }
+  94% { text-shadow: 3px 0 var(--void), -3px 0 var(--valid); }
+  95% { text-shadow: none; }
+  96.5% { text-shadow: -2px 0 var(--valid), 2px 0 var(--void); }
+  97.5% { text-shadow: none; }
+}
+
+.cursor-blink::after {
+  content: "_";
+  animation: blink 1.1s step-end infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ============================================================
+   MOTION — staged rises
+   ============================================================ */
+
+.rise {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.rise.d1 { animation-delay: 0.12s; }
+.rise.d2 { animation-delay: 0.26s; }
+.rise.d3 { animation-delay: 0.42s; }
+.rise.d4 { animation-delay: 0.6s; }
+.rise.d5 { animation-delay: 0.8s; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+    transform 0.08s ease;
+  user-select: none;
+}
+.btn:hover {
+  border-color: var(--ink);
+  background: rgba(23, 20, 13, 0.05);
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-solid {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+.btn-solid:hover {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn-danger {
+  color: var(--void);
+  border-color: rgba(29, 78, 216, 0.5);
+}
+.btn-danger:hover {
+  border-color: var(--void);
+  background: rgba(29, 78, 216, 0.08);
+}
+
+.btn-lg {
+  font-size: 0.8rem;
+  padding: 0.85rem 1.9rem;
+}
+
+.btn-quiet {
+  border: none;
+  padding: 0.35rem 0;
+  color: var(--ink-40);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  background: none;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.btn-quiet:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink-40);
+}
+.btn-quiet:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* the two great choices — deliberately equal in weight */
+.choice {
+  flex: 1;
+  min-width: min(220px, 100%);
+  padding: 1.35rem 1rem;
+  font-size: 0.88rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+    letter-spacing 0.25s ease;
+}
+.choice:hover {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+  letter-spacing: 0.3em;
+}
+.choice:active {
+  transform: scale(0.99);
+}
+
+/* ============================================================
+   PANELS
+   ============================================================ */
+
+.panel {
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.015);
+  padding: 1.15rem;
+}
+
+.panel-title {
+  font-size: 0.6rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 0.85rem;
+}
+
+.datarow {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.75rem;
+}
+.datarow:last-child {
+  border-bottom: none;
+}
+.datarow .k {
+  color: var(--ink-40);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+.datarow .v {
+  color: var(--ink);
+  text-align: right;
+  word-break: break-all;
+}
+
+/* status chip — a dot + label, the validity marker */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line);
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+.chip::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-25);
+}
+.chip.valid { border-color: rgba(15, 122, 61, 0.45); color: var(--valid); }
+.chip.valid::before { background: var(--valid); }
+.chip.questioning { border-color: rgba(91, 33, 182, 0.45); color: var(--questioning); }
+.chip.questioning::before { background: var(--questioning); }
+.chip.void { border-color: rgba(29, 78, 216, 0.45); color: var(--void); }
+.chip.void::before { background: var(--void); }
+
+/* ============================================================
+   THE DOCUMENT — paper register
+   ============================================================ */
+
+.document {
+  background:
+    linear-gradient(rgba(25, 23, 19, 0.015), rgba(25, 23, 19, 0.015)),
+    var(--paper);
+  color: var(--paper-ink);
+  padding: clamp(2rem, 6vw, 4rem);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 12px 40px rgba(25, 23, 19, 0.12);
+  border: 1px solid var(--paper-line);
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+.document ::selection {
+  background: var(--paper-ink);
+  color: var(--paper);
+}
+
+.document .doc-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+}
+
+.document h1 {
+  font-family: var(--font-mono);
+  font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+  letter-spacing: 0.08em;
+  margin: 0.4rem 0 0.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.document h2 {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin: 2.2rem 0 0.7rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--paper-line);
+  font-weight: 700;
+}
+
+.document p {
+  margin: 0.8rem 0;
+}
+
+.document ul {
+  margin: 0.8rem 0 0.8rem 1.2rem;
+  list-style: square;
+}
+.document li {
+  margin: 0.35rem 0;
+}
+
+.document strong {
+  letter-spacing: 0.02em;
+}
+
+.document .mono {
+  font-family: var(--font-mono);
+}
+
+.doc-rule {
+  border: none;
+  border-top: 1px solid var(--paper-line);
+  margin: 1.6rem 0;
+}
+
+/* ============================================================
+   ID CARD — interim; a fuller frame is coming from the artist.
+   No stamps, no serial, no machine-readable zone.
+   ============================================================ */
+
+.idcard {
+  position: relative;
+background: #fefaff;
+background: linear-gradient(140deg,rgba(254, 250, 255, 1) 0%, rgba(219, 206, 206, 1) 51%, rgba(194, 199, 204, 1) 100%);
+  color: var(--paper-ink);
+  aspect-ratio: 1.586;
+  width: 100%;
+  padding: 4.2% 4.5%;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  border: 1px solid var(--paper-line);
+  box-shadow: 0 10px 32px rgba(25, 23, 19, 0.14);
+  overflow: hidden;
+}
+
+.idcard .id-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: clamp(0.7rem, 1.4cqw, 0.9rem);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  border-bottom: 1px solid var(--paper-line);
+  padding-bottom: 4%;
+  margin-bottom: 4.5%;
+  gap: 1rem;
+}
+
+.idcard .id-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  white-space: nowrap;
+}
+.idcard .id-status::before {
+  content: "";
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 50%;
+  background: var(--dot, var(--paper-faint));
+}
+
+.idcard .id-body {
+  display: flex;
+  gap: 5%;
+  flex: 1;
+  min-height: 0;
+}
+
+.idcard .id-photo {
+  height: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(90deg,rgba(245, 230, 255, 1) 0%, rgba(219, 200, 218, 1) 51%, rgba(161, 182, 199, 1) 100%);
+  border: 1px solid var(--paper-line);
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.idcard .id-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.idcard .id-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6%;
+  min-width: 0;
+  font-size: clamp(0.6rem, 1.5cqw, 0.8rem);
+}
+
+.idcard .id-field .lbl {
+  font-size: 0.8em;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  display: block;
+}
+.idcard .id-field .val {
+    font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  word-break: break-all;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   BURN — the witchy destruction of a void identity
+   ============================================================ */
+
+.pyre {
+  position: relative;
+  width: 100%;
+  transform-origin: center 70%;
+}
+
+.pyre.lit .idcard {
+  animation: scorch 3.4s ease-in forwards;
+}
+
+.pyre.lit::before {
+  content: "";
+  position: absolute;
+  inset: -6% -6% -14% -6%;
+  pointer-events: none;
+  z-index: 3;
+  background:
+    radial-gradient(60% 40% at 50% 100%, rgba(29, 78, 216, 0.55), transparent 70%),
+    radial-gradient(50% 55% at 35% 92%, rgba(124, 58, 237, 0.5), transparent 72%),
+    radial-gradient(45% 55% at 68% 94%, rgba(56, 189, 248, 0.45), transparent 72%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: pyre-flames 3.4s ease-in forwards;
+}
+
+@keyframes scorch {
+  0% {
+    filter: none;
+    opacity: 1;
+    -webkit-mask-image: linear-gradient(0deg, #000 100%, transparent 140%);
+    mask-image: linear-gradient(0deg, #000 100%, transparent 140%);
+  }
+  35% {
+    filter: sepia(0.5) contrast(1.15) brightness(0.92);
+  }
+  100% {
+    filter: sepia(1) contrast(1.6) brightness(0.4) blur(2px);
+    opacity: 0;
+    transform: translateY(-10px) scale(0.985) rotate(-0.6deg);
+    -webkit-mask-image: linear-gradient(0deg, transparent 60%, transparent 60%);
+    mask-image: linear-gradient(0deg, transparent 60%, transparent 60%);
+  }
+}
+
+@keyframes pyre-flames {
+  0% { opacity: 0; }
+  25% { opacity: 0.9; }
+  80% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+
+.ember {
+  position: absolute;
+  bottom: 8%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #7c3aed;
+  box-shadow: 0 0 6px 1px rgba(124, 58, 237, 0.8);
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+}
+.pyre.lit .ember {
+  animation: rise-ember 2.8s ease-in forwards;
+}
+@keyframes rise-ember {
+  0% { opacity: 0; transform: translateY(0) scale(1); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-220px) translateX(var(--drift, 0)) scale(0.2); }
+}
+
+/* ============================================================
+   FORMS
+   ============================================================ */
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--line-strong);
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: var(--ink);
+  border-radius: 50%;
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background: var(--ink);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.checkline {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  cursor: pointer;
+  user-select: none;
+}
+.checkline input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.checkline .box {
+  width: 16px;
+  height: 16px;
+  border: 1px solid currentColor;
+  flex-shrink: 0;
+  margin-top: 0.2em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+}
+.checkline input:checked + .box::before {
+  content: "×";
+  font-weight: 700;
+}
+.checkline input:focus-visible + .box {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* generative canvas scales to its container */
+.face-canvas {
+  border: 1px solid var(--line);
+  background: var(--paper-shade);
+  overflow: hidden;
+}
+.face-canvas canvas {
+  max-width: 100%;
+  height: auto !important;
+  display: block;
+}
+
+/* dropzone */
+.dropzone {
+  border: 1px dashed var(--line-strong);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-60);
+}
+.dropzone:hover,
+.dropzone.drag {
+  border-color: var(--ink);
+  background: rgba(23, 20, 13, 0.04);
+}

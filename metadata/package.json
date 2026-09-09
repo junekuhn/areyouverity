@@ -1,0 +1,14 @@
+{
+  "name": "@transevil/metadata",
+  "version": "1.0.0",
+  "description": "Metadata generation and IPFS pinning for TRANSEVIL",
+  "type": "module",
+  "scripts": {
+    "generate": "node generate-metadata.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "form-data": "^4.0.0",
+    "dotenv": "^16.3.1"
+  }
+}
