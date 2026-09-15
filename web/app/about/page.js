@@ -15,7 +15,7 @@ export default function AboutPage() {
         <hr className="doc-rule" />
 
         <p>
-        This piece is a fundraiser for facial feminisation surgery for June, and a challenge to the ways we verify someone is who they say they are. Trans people are often seen as deceivers, because the basis for identity is often determined by a conflation of gender and sex assigned at birth. This predicament often forces trans people to carry ID&lsquo;s that are both inaccurate and &lsquo;out&lsquo; them to the whims of a legal verification system. <strong>The basis for proving identity should be a matter of trust, not biological determination.</strong>
+        This piece is a fundraiser for <a className="fundraiser" href="https://gofund.me/42d341d66">facial feminisation surgery for June</a>, and a challenge to the ways we verify someone is who they say they are. Trans people are often seen as deceivers, because the basis for identity is often determined by a conflation of gender and sex assigned at birth. This predicament often forces trans people to carry ID&lsquo;s that are both inaccurate and &lsquo;out&lsquo; them to the whims of a legal verification system. <strong>The basis for proving identity should be a matter of trust, not biological determination.</strong>
         </p>
 
         <p>
@@ -91,6 +91,13 @@ export default function AboutPage() {
             style={{ color: 'var(--paper-ink)', borderColor: 'var(--paper-line)' }}
           >
             Credits / AI usage statement
+          </Link>
+          <Link
+            href="https://gofund.me/42d341d66"
+            className="btn"
+            style={{ color: 'var(--paper-ink)', borderColor: 'var(--paper-line)' }}
+          >
+            gofundme
           </Link>
         </div>
       </article>

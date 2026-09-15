@@ -1,11 +1,12 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import IDCard from '../components/IDCard';
 import { useIdentity } from '@/hooks/useIdentity';
 import { isParadox } from '@/lib/identity';
+import html2canvas from 'html2canvas';
 
 const GREETINGS = {
   verity: { title: 'Hi, Verity.', sub: 'Your identity is valid.' },
@@ -18,6 +19,8 @@ const GREETINGS = {
 function CollectionContent() {
   const searchParams = useSearchParams();
   const { tokens, ready } = useIdentity();
+  const itemRefs = useRef(new Map());
+  const [downloading, setDownloading] = useState(false);
 
   // A personalised greeting only makes sense when a document exists to
   // greet — an empty registry gets the neutral title regardless of URL.
@@ -26,6 +29,58 @@ function CollectionContent() {
       title: 'The Collection.',
       sub: 'Your collection of ID documents currently in your wallet.',
     };
+
+ const downloadAsImage = async (index) => {
+
+        const element = itemRefs.current.get(index);
+        console.log(element)
+        if (!element) return;
+        setDownloading(true);
+
+        try {
+          // Temporarily apply inline styles for better capture
+          const originalStyle = element.style.cssText;
+          element.style.cssText += `
+            color: #000000 !important;
+            background-color: #ffffff !important;
+          `;
+
+          const canvas = await html2canvas(element, {
+        backgroundColor: '#ffffff',
+        scale: 2, // Increase to 3x for sharper image
+        logging: false,
+        useCORS: true,
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
+      });
+
+      // Restore original styles
+      element.style.cssText = originalStyle;
+
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          setDownloading(false);
+          return;
+        }
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+    
+        link.download = `ID-CARD-${Date.now()}.png`;
+        
+        document.body.appendChild(link);
+        link.click();
+        
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        setDownloading(false);
+      }, 'image/png');
+    } catch (error) {
+      console.error('Error capturing image:', error);
+      setDownloading(false);
+    }
+  };
 
   return (
     <div className="page page-wide">
@@ -55,10 +110,13 @@ function CollectionContent() {
             </Link>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8 rise d1">
-            {tokens.map((t) => (
+          <div className="grid sm:grid-cols-1 xl:grid-cols-2 gap-8 rise d1">
+            {tokens.map((t, index) => (
               <div key={t.id} className="space-y-3">
-                <IDCard token={t} />
+                <IDCard token={t} key={index}
+                    ref={(el) => 
+                      itemRefs.current.set(index, el)}
+                />
                 <div className="flex items-center justify-between">
                   <span
                     className={`chip ${
@@ -90,6 +148,14 @@ function CollectionContent() {
                       </Link>
                     </span>
                   )}
+                <button
+                    onClick={() => downloadAsImage(index)}
+                    className="btn"
+                    style={{ color: 'var(--paper-ink)', borderColor: 'var(--paper-ink)' }}
+                    disabled={downloading}
+                  >
+                    {downloading ? 'Downloading…' : 'Download ID'}
+                  </button>
                 </div>
               </div>
             ))}

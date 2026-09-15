@@ -82,8 +82,8 @@ function CreateContent() {
   const isNotVerity = signedAs === 'nonverity';
 
   return (
-    <div className="page page-wide">
-      <div className="grid lg:grid-cols-[1fr_20rem] gap-12 items-center">
+    <div className="page">
+      <div className="items-center">
         {/* canvas column */}
         <div className="space-y-8 rise">
           <div className="space-y-5">
@@ -100,41 +100,10 @@ function CreateContent() {
           />
         </div>
 
+        <div style={{ height: '40px' }}></div>
 
-        <aside className="space-y-6 rise d2 lg:sticky lg:top-8">
-          {/* <div className="panel">
-            <p className="panel-title">Main points</p>
-            <div className="prose-dim space-y-3 text-[0.78rem]">
-              <p>
-                You claim to be {isNotVerity ? 'Nonverity' : 'Verity'}, but you do
-                not yet own a valid {isNotVerity ? 'Nonverity' : 'Verity'} identity
-                token.
-              </p>
-              <p>
-                To verify this, you must commit to creating a token. This
-                process is a matter of transformation — creating an image that
-                will be used to verify later on.
-              </p>
-              <p>
-                Your identity will be validated through zero-knowledge proofs,
-                proving commitment without disclosure.
-              </p>
-            </div>
-          </div>
-
-          <div className="panel">
-            <p className="panel-title">The process</p>
-            <ol className="prose-dim space-y-2 text-[0.78rem] list-decimal list-inside">
-              <li>Adjust the sliders to customise your appearance</li>
-              <li>Create your identity commitment</li>
-              <li>Mint your {isNotVerity ? 'Nonverity' : 'Verity'} token</li>
-              <li>Commit to being {isNotVerity ? 'Nonverity' : 'Verity'}</li>
-            </ol>
-          </div> */}
-
-        </aside>
                   <button
-            className="btn btn-solid btn-lg w-full"
+            className="space-y-4 btn btn-solid btn-lg w-full"
             disabled={!params}
             onClick={lockIn}
           >

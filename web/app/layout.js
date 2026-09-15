@@ -5,7 +5,7 @@ import SiteHeader from './components/SiteHeader';
 export const metadata = {
   title: 'ARE YOU VERITY?',
   description:
-    'A generative art ID system powered by ZK-proofs. Part of TRANSEVIL, a work by June Kuhn.',
+    'A generative art ID system powered by ZK-proofs. A trans surgery fundraiser by June Kuhn.',
 };
 
 export default function RootLayout({ children }) {
@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
             <main className="site-main">{children}</main>
             <footer className="site-footer">
               <span>
-                Are You Verity? — a work by June Kuhn · Softworld 
+                Are You Verity? — an artwork fundraiser by June Kuhn · Softworld 
               </span>
             </footer>
           </div>

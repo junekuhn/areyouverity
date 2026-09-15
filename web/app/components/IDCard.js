@@ -1,5 +1,7 @@
 'use client';
 
+import { forwardRef } from 'react';
+
 /**
  * The speculative identity document — interim frame.
  * Status is shown only by a coloured dot (green / purple / blue); no
@@ -13,7 +15,7 @@ const STATUS = {
   VOID: { label: 'Void', color: 'var(--void)' },
 };
 
-export default function IDCard({ token, className = '' }) {
+const IDCard = forwardRef(({ token, className = '' }, ref) => {
   if (!token) return null;
 
   const { kind, status, image, commitment, address, inception } = token;
@@ -21,6 +23,7 @@ export default function IDCard({ token, className = '' }) {
 
   return (
     <div
+      ref={ref}
       className={`idcard ${className}`}
       style={{ containerType: 'inline-size' }}
     >
@@ -56,13 +59,17 @@ export default function IDCard({ token, className = '' }) {
           </div>
           <div className="id-field">
             <span className="lbl">Commitment</span>
-            <span className="val">{truncate(commitment, 18)}</span>
+            <span className="val">{truncate(commitment, 66)}</span>
           </div>
         </div>
       </div>
     </div>
   );
-}
+});
+
+IDCard.displayName = 'IDCard';
+
+export default IDCard;
 
 function truncate(str, n) {
   if (!str) return '—';

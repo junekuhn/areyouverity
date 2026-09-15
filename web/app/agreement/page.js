@@ -1,8 +1,9 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAccount, useSignMessage } from 'wagmi';
+import html2canvas from 'html2canvas';
 
 function AgreementContent() {
   const router = useRouter();
@@ -16,6 +17,8 @@ function AgreementContent() {
   const renew = searchParams.get('renew') || null;
   const [signing, setSigning] = useState(false);
   const [declined, setDeclined] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const articleRef = useRef(null);
 
   const execute = async () => {
     setSigning(true);
@@ -51,9 +54,57 @@ function AgreementContent() {
     );
   };
 
+ const downloadAsImage = async () => {
+  if (!articleRef.current) return;
+  setDownloading(true);
+
+  try {
+    // Temporarily apply inline styles for better capture
+    const originalStyle = articleRef.current.style.cssText;
+    articleRef.current.style.cssText += `
+      color: #000000 !important;
+      background-color: #ffffff !important;
+    `;
+
+    const canvas = await html2canvas(articleRef.current, {
+      backgroundColor: '#ffffff',
+      scale: 2, // Increase to 3x for sharper image
+      logging: false,
+      useCORS: true,
+      windowWidth: articleRef.current.scrollWidth,
+      windowHeight: articleRef.current.scrollHeight,
+    });
+
+    // Restore original styles
+    articleRef.current.style.cssText = originalStyle;
+
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        setDownloading(false);
+        return;
+      }
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const declaration = signAs === 'verity' ? 'VERITY' : 'NONVERITY';
+      link.download = `THE-AGREEMENT-${declaration}-${Date.now()}.png`;
+      
+      document.body.appendChild(link);
+      link.click();
+      
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      setDownloading(false);
+    }, 'image/png');
+  } catch (error) {
+    console.error('Error capturing image:', error);
+    setDownloading(false);
+  }
+};
   return (
     <div className="page">
-      <article className="document rise">
+      <article className="document rise" ref={articleRef}>
         <p className="doc-kicker">For execution by cryptographic signature</p>
         <h1>The Agreement</h1>
         <p
@@ -314,6 +365,14 @@ function AgreementContent() {
               onClick={() => router.push('/')}
             >
               Back
+            </button>
+            <button
+              onClick={downloadAsImage}
+              className="btn"
+              style={{ color: 'var(--paper-ink)', borderColor: 'var(--paper-ink)' }}
+              disabled={downloading}
+            >
+              {downloading ? 'Downloading…' : 'Download Agreement'}
             </button>
           </div>
         </div>

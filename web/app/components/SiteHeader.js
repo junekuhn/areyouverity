@@ -33,6 +33,13 @@ export default function SiteHeader() {
         {/* {mounted && summary !== 'NONE' && (
           <span className={`chip ${chip.cls}`}>{chip.label}</span>
         )} */}
+        <Link href="https://gofund.me/42d341d66">
+          <button
+            className={`whitespace-nowrap text-[0.68rem] tracking-[0.16em] uppercase transition-all duration-150 px-3 py-2 border border-[color:var(--line-strong)] hover:bg-[color:var(--ink)] hover:text-[color:var(--bg)]`} 
+          >
+            gofundme
+          </button>
+        </Link>
         <WalletConnect />
       </div>
     </header>

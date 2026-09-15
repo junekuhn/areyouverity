@@ -198,7 +198,7 @@ export default function LandingPage() {
 
               <div className="flex gap-6 justify-center">
                 <button
-                  className="btn-quiet"
+                  className="btn-large btn"
                   disabled={verifying}
                   onClick={() => setWantsUpload(false)}
                 >
@@ -217,7 +217,7 @@ export default function LandingPage() {
 
           <div className="rise d3">
             <button
-              className="btn-quiet"
+              className="btn btn-large"
               disabled={verifying}
               onClick={() => setAnswer(null)}
             >

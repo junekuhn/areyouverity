@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
 import IDCard from '../components/IDCard';
@@ -12,6 +12,7 @@ import {
   downloadJSON,
   shortRef,
 } from '@/lib/commitment';
+import html2canvas from 'html2canvas';
 
 export default function MintPage() {
   const router = useRouter();
@@ -21,6 +22,69 @@ export default function MintPage() {
   const [minted, setMinted] = useState(null);
   const [mintError, setMintError] = useState(null);
   const [paramsFile, setParamsFile] = useState(null);
+  const [downloading, setDownloading] = useState(false);
+  const divRef = useRef(null);
+
+  const STATUS = {
+  VALID: { label: 'Valid', color: 'var(--valid)' },
+  QUESTIONING: { label: 'Questioning', color: 'var(--questioning)' },
+  VOID: { label: 'Void', color: 'var(--void)' },
+};
+
+     const downloadAsImage = async () => {
+  if (!divRef.current) return;
+  setDownloading(true);
+
+  try {
+    // Temporarily apply inline styles for better capture
+    const originalStyle = divRef.current.style.cssText;
+    divRef.current.style.cssText += `
+      color: #000000 !important;
+      background-color: #ffffff !important;
+    `;
+
+    const canvas = await html2canvas(divRef.current, {
+      backgroundColor: '#ffffff',
+      scale: 2, // Increase to 3x for sharper image
+      logging: false,
+      useCORS: true,
+      windowWidth: divRef.current.scrollWidth,
+      windowHeight: divRef.current.scrollHeight,
+    });
+
+    // Restore original styles
+    divRef.current.style.cssText = originalStyle;
+
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        setDownloading(false);
+        return;
+      }
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+  
+      link.download = `ID-CARD-${Date.now()}.png`;
+      
+      document.body.appendChild(link);
+      link.click();
+      
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      setDownloading(false);
+    }, 'image/png');
+  } catch (error) {
+    console.error('Error capturing image:', error);
+    setDownloading(false);
+  }
+};
+
+function truncate(str, n) {
+  if (!str) return '—';
+  return str.length > n ? `${str.slice(0, n)}…` : str;
+}
+
 
   useEffect(() => {
     const raw = sessionStorage.getItem('ayj.pending');
@@ -94,12 +158,14 @@ export default function MintPage() {
     inception: new Date().toISOString(),
   };
 
+
+
   return (
     <div className="page page-wide">
       <div className="grid lg:grid-cols-2 gap-12 items-center">
         {/* the document being issued */}
         <div className="rise max-w-xl w-full mx-auto lg:mx-0">
-          <IDCard token={preview} />
+          <IDCard token={preview} ref={divRef}/>
         </div>
 
         <div className="space-y-8">
@@ -179,10 +245,15 @@ export default function MintPage() {
                   >
                     Download parameters again
                   </button>
-                )}
-                {/* <button className="btn" onClick={() => router.push('/collection')}>
-                  Skip — view collection
-                </button> */}
+                                  )}
+                  <button
+                    onClick={downloadAsImage}
+                    className="btn"
+                    style={{ color: 'var(--paper-ink)', borderColor: 'var(--paper-ink)' }}
+                    disabled={downloading}
+                  >
+                    {downloading ? 'Downloading…' : 'Download ID'}
+                  </button>
               </div>
             </>
           )}
